@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<pessoas>
+    <pessoa>
+        <nome>Luiz D Avila</nome>
+        <email> luiz@ifrs.com</email>
+    </pessoa>
+    <pessoa>
+        <nome>Nicole</nome>
+        <email> nicole@furg.com</email>
+    </pessoa>
+    <pessoa>
+        <nome>Igor</nome>
+        <email> igor@ifrs.com</email>
+    </pessoa>
+    <pessoa>
+        <nome>Roberto</nome>
+        <email> Roberto@spgs.com</email>
+    </pessoa>
+    <pessoa>
+        <nome>Geruza</nome>
+        <email> geruza@furg.br</email>
+    </pessoa>
+    <pessoa>
+        <nome>Douglas</nome>
+        <email> doga10@gmail.com</email>
+    </pessoa>
+</pessoas>

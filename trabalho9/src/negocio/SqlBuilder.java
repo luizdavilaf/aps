@@ -4,6 +4,8 @@ package negocio;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import javax.swing.JComponent;
+
 public class SqlBuilder {
 
     protected String comando;
@@ -13,8 +15,10 @@ public class SqlBuilder {
     protected String limit;
     protected String join;
     protected String[] colunas;
-    protected String tabela;
-    private Builder builder;
+    protected String tabela;    
+    private String from;
+    private String tabelaUpdate;
+        private String criterio;
 
     public SqlBuilder(Builder builder) {
         comando = builder.comando;
@@ -25,11 +29,28 @@ public class SqlBuilder {
         join = builder.join;
         colunas = builder.colunas;
         tabela = builder.tabela;
+        from = builder.from;
+        tabelaUpdate = builder.tabelaUpdate;
+        criterio = builder.criterio;
     }
-
+    
     @Override
     public String toString() {
-        return comando + join + where + group + order + limit + ";";
+        switch(this.comando){
+            case "UPDATE":
+            return comando+" " + tabelaUpdate + "\n SET " + criterio+ from +";";
+            
+            case "DELETE":
+            return comando + from +join + where + group + order + limit + ";";
+            
+            default:
+            if(this.colunas==null){
+                return comando + " * " + from +join + where + group + order + limit + ";";
+            }else{
+                return comando +" " +Arrays.stream(this.colunas).collect(Collectors.joining(","))+  from +join + where + group + order + limit + ";";            
+            }
+            
+        }
     }
 
     public String getTabela() {
@@ -106,40 +127,39 @@ public class SqlBuilder {
         private String group = "";
         private String order = "";
         private String join = "";
+        private String from = "";
         private String[] colunas;
+        private String tabelaUpdate="";
+        private String criterio="";
 
-        public Builder(Comando comando1, String tabela1) {
-            this.tabela = tabela1;
-            switch(comando1){
-                case SELECT:
-                this.comando = comando1.toString() + " *\n from " + tabela1;
-                break;
-                case DELETE:
-                this.comando = comando1.toString() + " \n from " + tabela1;
-                break;
-                default:
-                    break;     
-            }
+       
+
+        public Builder(Comando comando1) {   
+            this.comando = comando1.toString();
         }
 
-        public Builder(Comando comando1, String tabela1, String... colunas1) {
+        public Builder from (String tabela1){
+            this.tabela = tabela1;
+            this.from = "\n from "+tabela1;
+            return this;
+        }
+
+        public Builder colunas(String ... colunas1){
             this.colunas = colunas1;
-            this.tabela = tabela1;
-            this.comando = comando1.toString() + Arrays.stream(this.colunas).collect(Collectors.joining(",")) + "\n from "
-                    + tabela1;
+            return this;
         }
 
-
-        //update       
-        public Builder(Comando comando1, String tabela1, String coluna, String criterio, String origem) {    
-            this.tabela = tabela1;
-            this.comando = "UPDATE " + tabela1+ "\n SET "+coluna+ " = "+ criterio +  "\n from "
-                    + origem;
+        public Builder tabelaUp(String tabelaUpdate1){
+            this.tabelaUpdate = tabelaUpdate1;
+            return this;
         }
 
-        public Builder(){
-            this.comando=""            ;
+        public Builder criterio(String criterio1) {
+            this.criterio = criterio1;
+            return this;
         }
+
+      
 
         public Builder limit(int limite) {
             this.limit = "\n LIMIT " + Integer.toString(limite);
@@ -196,15 +216,15 @@ public class SqlBuilder {
                 if (j == alias.length) {
                     i = tamanho;
                 }
-            }
-            this.comando = "SELECT " + Arrays.stream(this.colunas).collect(Collectors.joining(",")) + "\n from "
-                    + this.tabela;
+            }           
             return this;
         }
 
         public SqlBuilder build() {
             return new SqlBuilder(this);
         }
+
+        
 
         
 

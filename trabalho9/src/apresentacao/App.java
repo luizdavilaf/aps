@@ -10,33 +10,37 @@ public class App {
         
 
         // SELECT SIMPLES
-        SqlBuilder s = new SqlBuilder.Builder(Comando.SELECT, "pessoa").build();
+        SqlBuilder s = new SqlBuilder.Builder(Comando.SELECT).from("pessoa").build();
         System.out.println(s.toString());
 
         // SELECT MAIS DE UMA COLUNA COM ALIAS
-        SqlBuilder s1 = new SqlBuilder.Builder(Comando.SELECT, "pessoa", "coluna1", "coluna2", "coluna3", "coluna4")
+        SqlBuilder s1 = new SqlBuilder.Builder(Comando.SELECT).from("pessoa").colunas("coluna1","coluna2","coluna3","coluna4") 
                 .alias("coluninha1", "coluninha2", "coluninha3").build();
         System.out.println(s1.toString());
 
         // SELECT MAIS DE UMA COLUNA COM JOIN
-        SqlBuilder s3 = new SqlBuilder.Builder(Comando.SELECT, "pessoa", "pessoa.nome", "salarios.salario")
+        SqlBuilder s3 = new SqlBuilder.Builder(Comando.SELECT).from("pessoa").colunas("pessoa.nome","salarios.salario")
                 .whereAnd("pessoa.idade>18").join("salarios", "cpf", "pessoa", "cpf").alias("nome", "salario").build();
         System.out.println(s3.toString());
 
         // delete
-        SqlBuilder s11 = new SqlBuilder.Builder(Comando.DELETE, "pessoa").whereAnd("cpf = '111.111.111-11'")
+        SqlBuilder s11 = new SqlBuilder.Builder(Comando.DELETE).from("pessoa").whereAnd("cpf = '111.111.111-11'")
                 .whereAnd("data_nascimento = '29-09-1989'").build();
         System.out.println(s11.toString());
 
-        // update
-        SqlBuilder s12 = new SqlBuilder.Builder(Comando.UPDATE, "pessoa", "salario", "reajustes.salario", "reajustes")
-                .build();
+        // update       
+        SqlBuilder s12 = new SqlBuilder.Builder(Comando.UPDATE).from("reajustes")
+        .criterio("salario=reajustes.salario").tabelaUp("pessoa").build();
         System.out.println(s12.toString());
 
         // insert
         InsertBuilder s13 = new InsertBuilder.Builder().colunas("nome", "cpf").valores("Luiz", "111.111.111-11")
                 .tabela("funcionario").build();
         System.out.println(s13.toString());
+
+       
+
+
 
 
 

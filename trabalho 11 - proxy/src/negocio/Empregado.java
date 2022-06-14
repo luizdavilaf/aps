@@ -1,5 +1,8 @@
 package negocio;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 
@@ -40,7 +43,7 @@ public class Empregado {
         this.numCarteiraMotorista = numCarteiraMotorista;
     }
 
-    public int getIdade() {              
+    public int getIdade() {                         
         return idade;
     }
 
@@ -54,8 +57,11 @@ public class Empregado {
             if((agora.getDayOfMonth()<this.dataNascimento.getDia())){
                 idade1--;
             }
-        }
+        }        
         return idade1;
     }
+
+   
+    
 
 }

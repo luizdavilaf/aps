@@ -1,9 +1,11 @@
-import static org.junit.jupiter.api.Assertions.*;
-import java.lang.reflect.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.lang.reflect.Field;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.fields.FieldSet;
-import negocio.*;
+import negocio.Date;
 
 public class DateTest {
 
@@ -212,9 +214,16 @@ public class DateTest {
         assertTrue(q.toString().equals("04/04/2017"), "erro no teste de situação complexa 2");
         q = q.plusDays(365);
         assertTrue(q.toString().equals("04/04/2018"), "erro no teste de situação complexa 3");
-       
     }
 
-    
+    @Test
+    public void minusDaysHeavy() {
+        Date q = new Date("20/02/2016");
+        Date d = q.minusDays(99);
+        assertEquals(13, d.getday(), "Teste errado no dia com minusDays grande");
+        assertEquals(11, d.getmonth(), "Teste errado no mês com minusDays grande");
+        assertEquals(2015, d.getyear(), "Teste errado no ano com minusDays grande");
+
+    }
 
 }

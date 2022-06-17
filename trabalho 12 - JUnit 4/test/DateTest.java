@@ -202,4 +202,14 @@ public class DateTest {
         assertTrue("erro no teste de situação complexa 3", q.toString().equals("04/04/2018"));
     }
 
+    @Test
+    public void minusDaysHeavy() {
+        Date q = new Date("20/02/2016");
+        Date d = q.minusDays(99);
+        assertEquals("Teste errado no dia com minusDays grande",13, d.getday());
+        assertEquals("Teste errado no mês com minusDays grande",11, d.getmonth());
+        assertEquals("Teste errado no ano com minusDays grande",2015, d.getyear());
+
+    }
+
 }

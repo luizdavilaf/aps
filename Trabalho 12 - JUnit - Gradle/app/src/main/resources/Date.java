@@ -19,20 +19,21 @@ public class Date {
             this.month = mes;
             this.year = ano;
         }
+        //System.out.println("entra aqui"+ this.toString());
         this.validaDate();
     }
 
     public Date(int year, int month, int day) {
-        if (day > 365) {
+        if (day > 31) {            
             this.year = day;
             this.month = month;
-            this.day = year;
-        } else {
+            this.day = year;            
+        } else {           
             this.day = day;
             this.month = month;
             this.year = year;
         }
-        //System.out.println(this.toString());
+        // System.out.println("entra aqui "+ this.toString());
         this.validaDate();
 
     }
@@ -44,7 +45,8 @@ public class Date {
     }
 
     public void validaDate() {
-        if ((this.day > 31) | (this.day < 1) | ((this.month == 2) && (this.day > 29))) {
+        int tamanhoDoMes = this.monthLength();
+        if ((this.day > tamanhoDoMes) | (this.day < 1) /* | ((this.month == 2) && (this.day > 29)) */) {
             throw new IllegalArgumentException("Dia inválido");
         }
         if ((this.month > 12) | (this.month < 1)) {
@@ -74,54 +76,60 @@ public class Date {
     }
 
     public Date minusDays(int num) {
-        if (this.day - num > 0) {
+        if ((this.day - num > 0)&&(num<58)) {
             return new Date(this.year, this.month, this.day - num);
-        } else {
+        } else if(num<58){
             int tamanhoMesAnterior = new Date(this.year, this.month - 1, this.day).monthLength();
             int dia = tamanhoMesAnterior - num + this.day;
             return new Date(this.year, this.month - 1, dia);
+        }else{//para os maiores que 58
+            Date n = this;
+        for (int i = 0; i < num; i++) {
+            n = n.yesterday();           
+        }
+        return n;
         }
 
     }
 
     /**
      * Soma um inteiro aos dias.
-     * Conta apenas o primeiro mes da soma com os dias exatos. A partir do segundo os meses terão duração de 30 dias.
-     * 
-     * PROBLEMA COM OS DIAS, RESOLVIDO USANDO O TOMORROW
+     * Conta apenas o primeiro mes da soma com os dias exatos.
+     * A partir do segundo os meses terão duração de 30 dias.
      * 
      * @param num inteiro para somar
      * @return Date com os dias somados
-     * 
+     *         PROBLEMA COM OS DIAS, RESOLVIDO USANDO O TOMORROW
      */
-    /* public Date plusDays(int num) {
+    @Deprecated
+    public Date plusDays1(int num) {
         int tamanhoDoMes = this.monthLength();
         int diasSomados = num + this.day;
         int ano;
         int mes;
-        int dia=0;
+        int dia = 0;
         if (diasSomados <= tamanhoDoMes) {
             return new Date(this.year, this.month, this.day + num);
-        } else if ((diasSomados > tamanhoDoMes) && (diasSomados <= 59)) { // 28+31=59
+        } else if ((diasSomados > tamanhoDoMes) && (diasSomados <= 58)) { // 28+31=59
             mes = 1;
             dia = diasSomados - tamanhoDoMes;
             if ((this.month == 12) && (dia == 1)) {
                 return new Date(this.year + 1, 01, dia);
             }
             return new Date(this.year, this.month + 1, dia);
-        }
+        }else //maiores que 58, quando tem mais de 1 ano dá erro 
         ano = (this.year) + ((((this.month - 1) * 30) + tamanhoDoMes + num) / 30 / 12);
         mes = ((((this.month - 1) * 30) + tamanhoDoMes + num) / 30 % 12);
         dia = ((((this.month - 1) * 30) + tamanhoDoMes + num + dia) % 30);
         return new Date(ano, mes, dia);
-    } */
+    }
 
     public Date plusDays(int num) {
         Date n = this;
-         for(int i = 0; i < num; i++){
-         n = n.tomorrow();
-         }         
-         return n;
+        for (int i = 0; i < num; i++) {
+            n = n.tomorrow();
+        }
+        return n;
     }
 
     public Date plusMonths(int num) {
@@ -153,10 +161,19 @@ public class Date {
     }
 
     public Date yesterday() {
-        return new Date(this.year, this.month, this.day - 1);
+        
+        if ((this.month == 01) && (this.day == 1)) {
+            return new Date(this.year-1, 12, 31);       
+        } else  if (this.day == 1) {
+            int tamanhoMesAnterior = new Date(this.year, this.month - 1, this.day).monthLength();         
+            return new Date( this.year, this.month -1, tamanhoMesAnterior);                     
+        }        
+        else {              
+            return new Date(this.year, this.month, this.day - 1);              
+        }
     }
 
-    public Date tomorrow() {        
+    public Date tomorrow() {
         int tamanhoDoMes = this.monthLength();
         int diasSomados = 1 + this.day;
         int mes;
@@ -171,7 +188,6 @@ public class Date {
             }
             return new Date(this.year, this.month + 1, dia);
         }
-
         return this;
     }
 
